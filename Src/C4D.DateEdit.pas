@@ -14,9 +14,6 @@ uses
   C4D.DateEdit.Third;
 
 type
-  TC4DPopupWindow = C4D.DateEdit.Third.TC4DPopupWindow;
-  TC4DCustomComboEdit = C4D.DateEdit.Third.TC4DCustomComboEdit;
-
   TC4DDateEdit = class(TC4DCustomDateEdit)
   protected
     procedure SetDate(Value: TDateTime); override;
