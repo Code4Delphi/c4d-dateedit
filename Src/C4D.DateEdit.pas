@@ -46,8 +46,6 @@ type
     procedure Show(Origin: TPoint); virtual; // Polaris
     property OnCloseUp: TC4DCloseUpEvent read FCloseUp write FCloseUp;
   end;
-///**
-
 
   TC4DCustomComboEdit = class(TCustomMaskEdit)
   private
@@ -268,7 +266,6 @@ type
     property PopupVisible;
   end;
 
-  //INI TC4DCustomDateEdit
   TC4DDateEdit = class(TC4DCustomDateEdit)
   protected
     procedure SetDate(Value: TDateTime); override;
@@ -350,7 +347,6 @@ type
     property OnEndDock;
     property OnStartDock;
   end;
-  //fim TC4DCustomDateEdit
 
 procedure Register;
 
@@ -390,14 +386,12 @@ begin
         raise Exception.CreateFmt(SDateOutOfMin,[FormatDateTime(DateFormat, Value),FormatDateTime(DateFormat,MinDate)])
       else if ((MaxDate <> NullDate) and (Value > MaxDate)) then
         raise Exception.CreateFmt(SDateOutOfMax,[FormatDateTime(DateFormat, Value),FormatDateTime(DateFormat,MaxDate)]);
-
-
     end;
 
   inherited SetDate(Value);
 end;
 
-//**
+{$REGION 'TC4DCustomComboEdit'}
 procedure TC4DCustomComboEdit.SetEditRect;
 var
   Loc: TRect;
@@ -1092,8 +1086,9 @@ begin
   FButton.OnClick := nil;
   inherited Destroy;
 end;
+{$ENDREGION}
 
-//INI TCustomDateEdit
+{$REGION 'TC4DCustomDateEdit'}
 constructor TC4DCustomDateEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -1631,12 +1626,10 @@ begin
     DoChange;
   end;
 end;
-
 //FIM TCustomDateEdit
+{$ENDREGION}
 
-//**
-{ TC4DPopupWindow }
-
+{$REGION 'TC4DPopupWindow'}
 constructor TC4DPopupWindow.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -1716,6 +1709,7 @@ begin
     SWP_NOACTIVATE or SWP_SHOWWINDOW or SWP_NOSIZE);
   Visible := True;
 end;
+{$ENDREGION}
 
 procedure DestroyLocals; far;
 begin
