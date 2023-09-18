@@ -15,7 +15,7 @@ uses
   Vcl.StdCtrls,
   Vcl.Mask,
   Vcl.Buttons,
-  C4D.DateEdit, C4D.DateEdit.Third;
+  C4D.DateEdit;
 
 type
   TC4DDateEditDemo01ViewMain = class(TForm)

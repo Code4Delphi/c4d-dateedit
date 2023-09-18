@@ -54,9 +54,9 @@ const
 implementation
 
 uses
-  Consts, Forms, Buttons, StdCtrls, Grids, ExtCtrls, C4D.DateEdit.Third;
+  Consts, Forms, Buttons, StdCtrls, Grids, ExtCtrls, C4D.DateEdit;
 
-{$R *.RES}
+{.$R *.RES}
 
 const
   SBtnGlyphs: array[0..3] of PChar = ('PREV2', 'PREV1', 'NEXT1', 'NEXT2');

@@ -34,8 +34,8 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
     OnClick = Button1Click
   end
   object C4DDateEdit1: TC4DDateEdit
-    Left = 256
-    Top = 232
+    Left = 312
+    Top = 256
     Width = 121
     Height = 21
     DialogTitle = 'Selecione uma Data'

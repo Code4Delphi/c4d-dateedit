@@ -125,7 +125,6 @@
         <DCCReference Include="Src\C4D.DateEdit.pas"/>
         <DCCReference Include="Src\C4D.DateEdit.Utils.pas"/>
         <DCCReference Include="Src\C4D.DateEdit.Consts.pas"/>
-        <DCCReference Include="Src\C4D.DateEdit.Third.pas"/>
         <DCCReference Include="Src\C4D.DateEdit.Third.PickDate.pas"/>
         <DCCReference Include="Src\C4D.DateEdit.Third.Utils.pas"/>
         <DCCReference Include="Src\C4D.DateEdit.Third.Utils.Dates.pas"/>

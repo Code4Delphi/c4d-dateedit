@@ -2,6 +2,8 @@ unit C4D.DateEdit.Third.Utils;
 
 interface
 
+{$WARN WIDECHAR_REDUCED OFF}
+
 uses
   System.SysUtils,
   System.Classes,
@@ -103,14 +105,11 @@ function GetDateOrder(const DateFormat: string): TDateOrder;
 var
   I: Integer;
 begin
-  Result := DefaultDateOrder;
   I := 1;
   while I <= Length(DateFormat) do
   begin
     case Chr(Ord(DateFormat[I]) and $DF) of
-
       'E': Result := doYMD;
-
       'Y': Result := doYMD;
       'M': Result := doMDY;
       'D': Result := doDMY;
