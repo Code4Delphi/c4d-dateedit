@@ -430,9 +430,12 @@ end;
 
 procedure TC4DCustomComboEdit.SetNumGlyphs(Value: TNumGlyphs);
 begin
-  if FGlyphKind in [gkDropDown, gkEllipsis] then FButton.NumGlyphs := 1
-  else if FGlyphKind = gkDefault then FButton.NumGlyphs := FDefNumGlyphs
-  else FButton.NumGlyphs := Value;
+  if FGlyphKind in [gkDropDown, gkEllipsis] then
+    FButton.NumGlyphs := 1
+  else if FGlyphKind = gkDefault then
+    FButton.NumGlyphs := FDefNumGlyphs
+  else
+    FButton.NumGlyphs := Value;
 end;
 
 function TC4DCustomComboEdit.GetButtonWidth: Integer;
@@ -685,11 +688,11 @@ end;
 function TC4DCustomComboEdit.BtnWidthStored: Boolean;
 begin
   if (FGlyphKind = gkDefault) and (Glyph <> nil) then
-    Result := ButtonWidth <> Max(Glyph.Width div FButton.NumGlyphs + 6,
-      DefEditBtnWidth)
+    Result := ButtonWidth <> Max(Glyph.Width div FButton.NumGlyphs + 6, DefEditBtnWidth)
   else if FGlyphKind = gkDropDown then
     Result := ButtonWidth <> GetSystemMetrics(SM_CXVSCROLL) + 1
-  else Result := ButtonWidth <> DefEditBtnWidth;
+  else
+    Result := ButtonWidth <> DefEditBtnWidth;
 end;
 
 procedure TC4DCustomComboEdit.SetGlyphKind(Value: TGlyphKind);
@@ -697,12 +700,12 @@ begin
   if FGlyphKind <> Value then
   begin
     FGlyphKind := Value;
-    if (FGlyphKind = gkCustom) and (csReading in ComponentState) then
-    begin
+    if(FGlyphKind = gkCustom) and (csReading in ComponentState)then
       Glyph := nil;
-    end;
+
     RecreateGlyph;
-    if (FGlyphKind = gkDefault) and (Glyph <> nil) then
+
+    if(FGlyphKind = gkDefault) and (Glyph <> nil)then
       ButtonWidth := Max(Glyph.Width div FButton.NumGlyphs + 6, FButton.Width)
     else if FGlyphKind = gkDropDown then
     begin

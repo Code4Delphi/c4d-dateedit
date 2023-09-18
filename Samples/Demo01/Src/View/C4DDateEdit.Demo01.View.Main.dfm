@@ -19,9 +19,19 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
   TextHeight = 13
   object Edit1: TEdit
     Left = 97
-    Top = 176
+    Top = 168
     Width = 121
     Height = 21
     TabOrder = 0
+  end
+  object C4DDateEdit1: TC4DDateEdit
+    Left = 256
+    Top = 200
+    Width = 121
+    Height = 21
+    DialogTitle = 'Selecione uma Data'
+    NumGlyphs = 2
+    CalendarStyle = csPopup
+    TabOrder = 1
   end
 end
