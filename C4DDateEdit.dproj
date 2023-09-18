@@ -130,33 +130,17 @@
         <DCCReference Include="Src\C4D.DateEdit.Third.PickDate.pas"/>
         <DCCReference Include="Src\C4D.DateEdit.Third.Utils.pas"/>
         <DCCReference Include="Src\C4D.DateEdit.Third.Utils.Dates.pas"/>
-        <RcItem Include="Img\TC4DDateEdit.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>TC4DDateEdit</ResourceId>
-        </RcItem>
         <RcItem Include="Img\c4d_calendar.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>c4d_calendar</ResourceId>
         </RcItem>
+        <RcItem Include="Img\TC4DDateEdit.bmp">
+            <ResourceType>BITMAP</ResourceType>
+            <ResourceId>TC4DDateEdit</ResourceId>
+        </RcItem>
         <RcItem Include="Img\TC4DDBDateEdit.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>TC4DDBDateEdit</ResourceId>
-        </RcItem>
-        <RcItem Include="Img\c4d_next1.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>c4d_next1</ResourceId>
-        </RcItem>
-        <RcItem Include="Img\c4d_next2.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>c4d_next2</ResourceId>
-        </RcItem>
-        <RcItem Include="Img\c4d_prev1.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>c4d_prev1</ResourceId>
-        </RcItem>
-        <RcItem Include="Img\c4d_prev2.bmp">
-            <ResourceType>BITMAP</ResourceType>
-            <ResourceId>c4d_prev2</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

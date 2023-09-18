@@ -14,20 +14,16 @@ uses
   Vcl.Dialogs,
   Vcl.StdCtrls,
   Vcl.Mask,
-  Vcl.Buttons,
-  C4D.DateEdit, RxToolEdit;
+  Vcl.Buttons, C4D.DateEdit;
 
 type
   TC4DDateEditDemo01ViewMain = class(TForm)
     Edit1: TEdit;
     Button1: TButton;
     C4DDateEdit1: TC4DDateEdit;
-    C4DDBDateEdit1: TC4DDBDateEdit;
     C4DDateEdit2: TC4DDateEdit;
-    DateEdit1: TDateEdit;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
-    procedure Button1Click(Sender: TObject);
   private
   public
   end;
@@ -51,14 +47,6 @@ begin
     Key := #0;
     Perform(Wm_NextDlgCtl, 0, 0);
   end;
-end;
-
-procedure TC4DDateEditDemo01ViewMain.Button1Click(Sender: TObject);
-var
-  C4DDateEdit1: TC4DDateEdit;
-begin
-  C4DDateEdit1 := TC4DDateEdit.Create(Self);
-  C4DDateEdit1.Parent := Self;
 end;
 
 end.
