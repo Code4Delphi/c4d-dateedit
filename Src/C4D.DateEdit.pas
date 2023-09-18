@@ -103,7 +103,9 @@ procedure Register;
 
 implementation
 
-//{..$R *.RES}
+{.$R *.RES}
+{.$R C4DDateEdit.dcr}
+{.$R .\Images\csComponent.dcr}
 
 uses
   C4D.DateEdit.Consts,
@@ -130,10 +132,9 @@ begin
   if not FDateAutoBetween then
     if Value <> NullDate then
     begin
-      if ((MinDate <> NullDate) and (MaxDate <> NullDate) and
-         ((Value < MinDate) or (Value > MaxDate))) then
+      if((MinDate <> NullDate) and (MaxDate <> NullDate)and((Value < MinDate) or (Value > MaxDate)))then
         raise Exception.CreateFmt(SDateOutOfRange,[FormatDateTime(DateFormat, Value),FormatDateTime(DateFormat, MinDate), FormatDateTime(DateFormat, MaxDate)])
-      else if ((MinDate <> NullDate) and (Value < MinDate)) then
+      else if ((MinDate <> NullDate) and (Value < MinDate))then
         raise Exception.CreateFmt(SDateOutOfMin,[FormatDateTime(DateFormat, Value),FormatDateTime(DateFormat,MinDate)])
       else if ((MaxDate <> NullDate) and (Value > MaxDate)) then
         raise Exception.CreateFmt(SDateOutOfMax,[FormatDateTime(DateFormat, Value),FormatDateTime(DateFormat,MaxDate)]);

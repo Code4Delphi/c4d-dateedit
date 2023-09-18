@@ -1000,6 +1000,7 @@ begin
     TC4DPopupWindow(FPopup).OnCloseUp := PopupCloseUp;
     TC4DPopupWindow(FPopup).Color := FPopupColor;
     GlyphKind := gkDefault; { force update }
+    FGlyphKind := gkCustom
   finally
     ControlState := ControlState - [csCreating];
   end;

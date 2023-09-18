@@ -2,8 +2,8 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
   Left = 0
   Top = 0
   Caption = 'C4DDateEditDemo01ViewMain'
-  ClientHeight = 379
-  ClientWidth = 618
+  ClientHeight = 349
+  ClientWidth = 607
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,20 +18,10 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
   PixelsPerInch = 96
   TextHeight = 13
   object Edit1: TEdit
-    Left = 97
-    Top = 168
+    Left = 209
+    Top = 136
     Width = 121
     Height = 21
     TabOrder = 0
-  end
-  object C4DDateEdit1: TC4DDateEdit
-    Left = 256
-    Top = 200
-    Width = 121
-    Height = 21
-    DialogTitle = 'Selecione uma Data'
-    NumGlyphs = 2
-    CalendarStyle = csPopup
-    TabOrder = 1
   end
 end

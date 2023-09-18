@@ -21,7 +21,6 @@ uses
 type
   TC4DDateEditDemo01ViewMain = class(TForm)
     Edit1: TEdit;
-    C4DDateEdit1: TC4DDateEdit;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
   private

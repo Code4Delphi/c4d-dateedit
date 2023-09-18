@@ -129,9 +129,9 @@
         <DCCReference Include="Src\C4D.DateEdit.Third.PickDate.pas"/>
         <DCCReference Include="Src\C4D.DateEdit.Third.Utils.pas"/>
         <DCCReference Include="Src\C4D.DateEdit.Third.Utils.Dates.pas"/>
-        <RcItem Include="Img\c4d_calendar.bmp">
+        <RcItem Include="Img\TC4DDateEdit.bmp">
             <ResourceType>BITMAP</ResourceType>
-            <ResourceId>c4d_calendar</ResourceId>
+            <ResourceId>TC4DDateEdit</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
