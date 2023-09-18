@@ -32,7 +32,9 @@ package C4DDateEdit;
 requires
   rtl,
   vcl,
-  RtmRxCtl270;
+  RtmRxCtl270,
+  dbrtl,
+  vcldb;
 
 contains
   C4D.DateEdit in 'Src\C4D.DateEdit.pas',

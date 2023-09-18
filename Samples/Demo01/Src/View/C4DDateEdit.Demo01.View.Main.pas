@@ -22,6 +22,7 @@ type
     Edit1: TEdit;
     Button1: TButton;
     C4DDateEdit1: TC4DDateEdit;
+    C4DDBDateEdit1: TC4DDBDateEdit;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);

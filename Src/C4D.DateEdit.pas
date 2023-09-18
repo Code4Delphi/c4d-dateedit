@@ -10,6 +10,7 @@ uses
   System.Variants,
   System.SysConst,
   System.UITypes,
+  System.StrUtils,
   Winapi.Windows,
   Winapi.Messages,
   Vcl.Controls,
@@ -20,6 +21,8 @@ uses
   Vcl.Forms,
   Vcl.Menus,
   Vcl.Dialogs,
+  Vcl.DBCtrls,
+  Data.DB,
   C4D.DateEdit.Third.PickDate,
   C4D.DateEdit.Third.Utils;
 
@@ -348,6 +351,127 @@ type
     property OnStartDock;
   end;
 
+  TC4DDBDateEdit = class(TC4DCustomDateEdit)
+  private
+    FInReset: Boolean; // Polaris
+    FDataLink: TFieldDataLink;
+    FCanvas: TControlCanvas;
+    procedure DataChange(Sender: TObject);
+    procedure EditingChange(Sender: TObject);
+    function GetDataField: string;
+    function GetDataSource: TDataSource;
+    function GetField: TField;
+    procedure SetDataField(const Value: string);
+    procedure SetDataSource(Value: TDataSource);
+    procedure SetReadOnly(Value: Boolean);
+    procedure UpdateData(Sender: TObject);
+    procedure AfterPopup(Sender: TObject; var Date: TDateTime; var Action: Boolean);
+    procedure WMCut(var Message: TMessage); message WM_CUT;
+    procedure WMPaste(var Message: TMessage); message WM_PASTE;
+    procedure CMEnter(var Message: TCMEnter); message CM_ENTER;
+    procedure CMExit(var Message: TCMExit); message CM_EXIT;
+    procedure CMGetDataLink(var Message: TMessage); message CM_GETDATALINK;
+    procedure WMPaint(var Message: TWMPaint); message WM_PAINT;
+  protected
+    procedure AcceptValue(const Value: Variant); override;
+    procedure ApplyDate(Value: TDateTime); override;
+    function GetReadOnly: Boolean; override;
+    procedure Change; override;
+    function EditCanModify: Boolean; override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure KeyPress(var Key: Char); override;
+    procedure Notification(AComponent: TComponent;
+      Operation: TOperation); override;
+    procedure Reset; override;
+
+    // Polaris
+    procedure SetDate(Value: TDateTime); override;
+    function IsValidDate(Value: TDateTime): Boolean;
+    // Polaris
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure UpdateMask; override;
+    function ExecuteAction(Action: TBasicAction): Boolean; override;
+    function UpdateAction(Action: TBasicAction): Boolean; override;
+    function UseRightToLeftAlignment: Boolean; override;
+    property Field: TField read GetField;
+  published
+    // Polaris
+    property DateAutoBetween;
+    property MinDate;
+    property MaxDate;
+    property Align;
+    // Polaris
+    property CalendarHints;
+    property DataField: string read GetDataField write SetDataField;
+    property DataSource: TDataSource read GetDataSource write SetDataSource;
+    property ReadOnly: Boolean read GetReadOnly write SetReadOnly default False;
+    property AutoSelect;
+    property BlanksChar;
+    property BorderStyle;
+    property ButtonHint;
+    property CheckOnExit;
+    property ClickKey;
+    property Color;
+    property Ctl3D;
+    property DefaultToday;
+    property DialogTitle;
+    property DirectInput;
+    property DragCursor;
+    property DragMode;
+    property Enabled;
+    property Font;
+    property GlyphKind;
+    { Ensure GlyphKind is declared before Glyph and ButtonWidth }
+    property Glyph;
+    property ButtonWidth;
+    property HideSelection;
+    property Anchors;
+    property BiDiMode;
+    property Constraints;
+    property DragKind;
+    property ParentBiDiMode;
+    property ImeMode;
+    property ImeName;
+    property MaxLength;
+    property NumGlyphs;
+    property ParentColor;
+    property ParentCtl3D;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupAlign;
+    property PopupColor;
+    property PopupMenu;
+    property ShowHint;
+    property CalendarStyle;
+    property TabOrder;
+    property TabStop;
+    property StartOfWeek;
+    property Weekends;
+    property WeekendColor;
+    property YearDigits;
+    property Visible;
+    property OnButtonClick;
+    property OnChange;
+    property OnClick;
+    property OnDblClick;
+    property OnDragDrop;
+    property OnDragOver;
+    property OnEndDrag;
+    property OnEnter;
+    property OnExit;
+    property OnKeyDown;
+    property OnKeyPress;
+    property OnKeyUp;
+    property OnMouseDown;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnStartDrag;
+    property OnContextPopup;
+    property OnEndDock;
+    property OnStartDock;
+  end;
 procedure Register;
 
 implementation
@@ -362,9 +486,10 @@ var
 
 procedure Register;
 begin
-  RegisterComponents('C4D', [TC4DDateEdit]);
+  RegisterComponents('C4D', [TC4DDateEdit, TC4DDBDateEdit]);
 end;
 
+{$REGION 'TC4DDateEdit'}
 constructor TC4DDateEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -390,6 +515,452 @@ begin
 
   inherited SetDate(Value);
 end;
+{$ENDREGION}
+
+{$REGION 'TC4DDBDateEdit'}
+constructor TC4DDBDateEdit.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  ControlStyle := ControlStyle + [csReplicatable];
+  inherited ReadOnly := True;
+  FInReset := False; // Polaris
+  FDataLink := TFieldDataLink.Create;
+  FDataLink.Control := Self;
+  FDataLink.OnDataChange := DataChange;
+  FDataLink.OnEditingChange := EditingChange;
+  FDataLink.OnUpdateData := UpdateData;
+  Self.OnAcceptDate := AfterPopup;
+  AlwaysEnable := True;
+  UpdateMask;
+end;
+
+destructor TC4DDBDateEdit.Destroy;
+begin
+  FDataLink.Free;
+  FDataLink := nil;
+  FCanvas.Free;
+  inherited Destroy;
+end;
+
+procedure TC4DDBDateEdit.AfterPopup(Sender: TObject; var Date: TDateTime;
+  var Action: Boolean);
+begin
+  Action := Action and (DataSource <> nil) and (DataSource.DataSet <> nil) and
+    DataSource.DataSet.CanModify;
+  if Action then Action := EditCanModify;
+end;
+
+procedure TC4DDBDateEdit.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) and (FDataLink <> nil) and
+    (AComponent = DataSource) then DataSource := nil;
+end;
+
+procedure TC4DDBDateEdit.KeyDown(var Key: Word; Shift: TShiftState);
+begin
+  inherited KeyDown(Key, Shift);
+  if not ReadOnly and ((Key = VK_DELETE) or ((Key = VK_INSERT)
+    and (ssShift in Shift))) then
+    FDataLink.Edit;
+end;
+
+procedure TC4DDBDateEdit.KeyPress(var Key: Char);
+begin
+{
+  if (Key = #27) then begin
+    Reset;
+    Key := #0;
+  end;
+}
+  inherited KeyPress(Key);
+  if CharInSet(Key, [#32..#255]) and (FDataLink.Field <> nil) and
+    not CharInSet(Key, ['0'..'9']) and (Key <> FormatSettings.DateSeparator) then
+  begin
+    //Beep;
+    Key := #0;
+  end;
+  case Key of
+    ^H, ^V, ^X, '0'..'9': FDataLink.Edit;
+    #27:
+      begin
+        Reset;
+        Key := #0;
+      end;
+  end;
+end;
+
+function TC4DDBDateEdit.EditCanModify: Boolean;
+begin
+  Result := FDataLink.Edit;
+end;
+
+procedure TC4DDBDateEdit.Reset;
+begin
+  FInReset := True; // Polaris
+  FDataLink.Reset;
+  SelectAll;
+  FInReset := False; // Polaris
+end;
+
+// Polaris begin
+
+function TC4DDBDateEdit.IsValidDate(Value: TDateTime): Boolean;
+const
+  SDateOutOfRange = '''%s'' - data inválida. O valor deve estar entre ''%s'' and ''%s''';
+  SDateOutOfMin = '''%s'' - data inválida. O valor deve ser maior que ''%s''';
+  SDateOutOfMax = '''%s'' - data inválida. O valor deve ser menor que ''%s''';
+begin
+  Result := FDateAutoBetween;
+  if not Result then
+    if (not FInReset) and FDataLink.Editing then
+    try
+      if (Value <> NullDate) then
+      begin
+        if((MinDate <> NullDate) and (MaxDate <> NullDate)and((Value < MinDate) or (Value > MaxDate)))then
+          raise Exception.CreateFmt(SDateOutOfRange,[FormatDateTime(DateFormat, Value),FormatDateTime(DateFormat, MinDate), FormatDateTime(DateFormat, MaxDate)])
+        else if ((MinDate <> NullDate) and (Value < MinDate))then
+          raise Exception.CreateFmt(SDateOutOfMin,[FormatDateTime(DateFormat, Value),FormatDateTime(DateFormat,MinDate)])
+        else if ((MaxDate <> NullDate) and (Value > MaxDate)) then
+          raise Exception.CreateFmt(SDateOutOfMax,[FormatDateTime(DateFormat, Value),FormatDateTime(DateFormat,MaxDate)]);
+      end;
+      Result := True;
+    except
+      Reset;
+      raise;
+    end;
+end;
+
+procedure TC4DDBDateEdit.SetDate(Value: TDateTime);
+begin
+  IsValidDate(Value);
+  inherited SetDate(Value);
+end;
+// Polaris end
+
+procedure TC4DDBDateEdit.Change;
+begin
+  if not Formatting then FDataLink.Modified;
+  inherited Change;
+end;
+
+function TC4DDBDateEdit.GetDataSource: TDataSource;
+begin
+  Result := FDataLink.DataSource;
+end;
+
+procedure TC4DDBDateEdit.SetDataSource(Value: TDataSource);
+begin
+  if not (FDataLink.DataSourceFixed and (csLoading in ComponentState)) then
+    FDataLink.DataSource := Value;
+  if Value <> nil then Value.FreeNotification(Self);
+end;
+
+function TC4DDBDateEdit.GetDataField: string;
+begin
+  Result := FDataLink.FieldName;
+end;
+
+procedure TC4DDBDateEdit.SetDataField(const Value: string);
+begin
+  FDataLink.FieldName := Value;
+end;
+
+function TC4DDBDateEdit.GetReadOnly: Boolean;
+begin
+  Result := FDataLink.ReadOnly;
+end;
+
+procedure TC4DDBDateEdit.SetReadOnly(Value: Boolean);
+begin
+  FDataLink.ReadOnly := Value;
+end;
+
+function TC4DDBDateEdit.GetField: TField;
+begin
+  Result := FDataLink.Field;
+end;
+
+procedure TC4DDBDateEdit.UpdateMask;
+begin
+  UpdateFormat;
+  UpdatePopup;
+  DataChange(nil);
+end;
+
+procedure TC4DDBDateEdit.DataChange(Sender: TObject);
+begin
+  if FDataLink.Field <> nil then
+  begin
+    EditMask := GetDateMask;
+// Polaris
+    inherited SetDate(FDataLink.Field.AsDateTime);
+//    Self.Date := FDataLink.Field.AsDateTime;
+//    SetDate(FDataLink.Field.AsDateTime);
+// Polaris
+  end
+  else
+  begin
+    if csDesigning in ComponentState then
+    begin
+      EditMask := '';
+      EditText := Name;
+    end
+    else
+    begin
+      EditMask := GetDateMask;
+      if DefaultToday then
+        Date := System.SysUtils.Date
+      else
+        Date := NullDate;
+    end;
+  end;
+end;
+
+procedure TC4DDBDateEdit.EditingChange(Sender: TObject);
+begin
+  inherited ReadOnly := not FDataLink.Editing;
+  if FDataLink.Editing and DefaultToday and (FDataLink.Field <> nil) and
+    (FDataLink.Field.AsDateTime = NullDate) then
+    FDataLink.Field.AsDateTime := System.SysUtils.Now;
+end;
+
+procedure TC4DDBDateEdit.UpdateData(Sender: TObject);
+var
+  D: TDateTime;
+begin
+  ValidateEdit;
+  D := Self.Date;
+  if D <> NullDate then
+  begin
+    if Int(FDataLink.Field.AsDateTime) <> D then
+      FDataLink.Field.AsDateTime := D + Frac(FDataLink.Field.AsDateTime)
+  end
+  else
+    FDataLink.Field.Clear;
+end;
+
+procedure TC4DDBDateEdit.CMGetDataLink(var Message: TMessage);
+begin
+  Message.Result := Integer(FDataLink);
+end;
+
+function EditorTextMargins(Editor: TC4DCustomComboEdit): TPoint;
+var
+  DC: HDC;
+  SaveFont: HFont;
+  I: Integer;
+  SysMetrics, Metrics: TTextMetric;
+begin
+  with Editor do begin
+    if NewStyleControls then begin
+      if BorderStyle = Vcl.Forms.bsNone then I := 0
+      else if Ctl3D then I := 1
+      else I := 2;
+      Result.X := SendMessage(Handle, EM_GETMARGINS, 0, 0) and $0000FFFF + I;
+      Result.Y := I;
+    end
+    else begin
+      if BorderStyle = Vcl.Forms.bsNone then I := 0
+      else begin
+        DC := GetDC(0);
+        GetTextMetrics(DC, SysMetrics);
+        SaveFont := SelectObject(DC, Font.Handle);
+        GetTextMetrics(DC, Metrics);
+        SelectObject(DC, SaveFont);
+        ReleaseDC(0, DC);
+        I := SysMetrics.tmHeight;
+        if I > Metrics.tmHeight then I := Metrics.tmHeight;
+        I := I div 4;
+      end;
+      Result.X := I;
+      Result.Y := I;
+    end;
+  end;
+end;
+
+function PaintComboEdit(Editor: TC4DCustomComboEdit; const AText: string;
+  AAlignment: TAlignment; StandardPaint: Boolean;
+  var ACanvas: TControlCanvas; var Message: TWMPaint): Boolean;
+var
+  AWidth, ALeft: Integer;
+  _Margins: TPoint;
+  R: TRect;
+  DC: HDC;
+  PS: TPaintStruct;
+  S: string;
+  ExStyle: DWORD;
+const
+  AlignStyle: array[Boolean, TAlignment] of DWORD =
+   ((WS_EX_LEFT, WS_EX_RIGHT, WS_EX_LEFT),
+    (WS_EX_RIGHT, WS_EX_LEFT, WS_EX_LEFT));
+begin
+  Result := True;
+  with Editor do
+  begin
+    if UseRightToLeftAlignment then ChangeBiDiModeAlignment(AAlignment);
+    if StandardPaint and not (csPaintCopy in ControlState) then
+    begin
+      if SysLocale.MiddleEast and HandleAllocated and (IsRightToLeft) then
+      begin { This keeps the right aligned text, right aligned }
+        ExStyle := DWORD(GetWindowLong(Handle, GWL_EXSTYLE)) and (not WS_EX_RIGHT) and
+          (not WS_EX_RTLREADING) and (not WS_EX_LEFTSCROLLBAR);
+        if UseRightToLeftReading then
+          ExStyle := ExStyle or WS_EX_RTLREADING;
+        if UseRightToLeftScrollbar then
+          ExStyle := ExStyle or WS_EX_LEFTSCROLLBAR;
+        ExStyle := ExStyle or
+          AlignStyle[UseRightToLeftAlignment, AAlignment];
+        if DWORD(GetWindowLong(Handle, GWL_EXSTYLE)) <> ExStyle then
+          SetWindowLong(Handle, GWL_EXSTYLE, ExStyle);
+      end;
+
+      Result := False;
+      { return false if we need to use standard paint handler }
+      Exit;
+    end;
+    { Since edit controls do not handle justification unless multi-line (and
+      then only poorly) we will draw right and center justify manually unless
+      the edit has the focus. }
+    if ACanvas = nil then
+    begin
+      ACanvas := TControlCanvas.Create;
+      ACanvas.Control := Editor;
+    end;
+    DC := Message.DC;
+    if DC = 0 then DC := BeginPaint(Handle, PS);
+    ACanvas.Handle := DC;
+    try
+      ACanvas.Font := Font;
+      if not Enabled and NewStyleControls and not
+        (csDesigning in ComponentState) and
+        (ColorToRGB(Color) <> ColorToRGB(clGrayText)) then
+        ACanvas.Font.Color := clGrayText;
+      with ACanvas do begin
+        R := ClientRect;
+        if not (NewStyleControls and Ctl3D) and
+          (BorderStyle = bsSingle) then
+        begin
+          Brush.Color := clWindowFrame;
+          FrameRect(R);
+          InflateRect(R, -1, -1);
+        end;
+        Brush.Color := Color;
+        S := AText;
+        AWidth := TextWidth(S);
+        _Margins := EditorTextMargins(Editor);
+
+        if PopupVisible then ALeft := Editor.Margins.Left
+        else
+        begin
+          if ButtonWidth > 0 then Inc(AWidth);
+          case AAlignment of
+            taLeftJustify:
+              ALeft := _Margins.X;
+            taRightJustify:
+              ALeft := ClientWidth - ButtonWidth - AWidth - _Margins.X{Polaris - 2};
+          else
+              ALeft := (ClientWidth - ButtonWidth - AWidth) div 2;
+          end;
+        end;
+
+        if SysLocale.MiddleEast then UpdateTextFlags;
+        TextRect(R, ALeft, _Margins.Y, S);
+      end;
+    finally
+      ACanvas.Handle := 0;
+      if Message.DC = 0 then EndPaint(Handle, PS);
+    end;
+  end;
+end;
+
+procedure TC4DDBDateEdit.WMPaint(var Message: TWMPaint);
+var
+  S: string;
+begin
+  if (csPaintCopy in ControlState) and (FDataLink.Field <> nil) then
+  begin
+    if FDataLink.Field.IsNull then
+    begin
+      S := GetDateFormat;
+      S := ReplaceStr(ReplaceStr(ReplaceStr(ReplaceStr(S, '/', FormatSettings.DateSeparator),
+        'Y', ' '), 'M', ' '), 'D', ' ');
+    end
+    else
+      S := FormatDateTime(GetDateFormat, FDataLink.Field.AsDateTime);
+  end
+  else
+    S := EditText;
+  if not PaintComboEdit(Self, S, Alignment, True, FCanvas, Message) then
+    inherited;
+end;
+
+procedure TC4DDBDateEdit.AcceptValue(const Value: Variant);
+begin
+  if VarIsNull(Value) or VarIsEmpty(Value) then
+    FDataLink.Field.Clear
+  else
+    FDataLink.Field.AsDateTime :=
+      VarToDateTime(Value) + Frac(FDataLink.Field.AsDateTime);
+  DoChange;
+end;
+
+procedure TC4DDBDateEdit.ApplyDate(Value: TDateTime);
+begin
+  FDataLink.Edit;
+  inherited ApplyDate(Value);
+end;
+
+procedure TC4DDBDateEdit.WMPaste(var Message: TMessage);
+begin
+  FDataLink.Edit;
+  inherited;
+end;
+
+procedure TC4DDBDateEdit.WMCut(var Message: TMessage);
+begin
+  FDataLink.Edit;
+  inherited;
+end;
+
+procedure TC4DDBDateEdit.CMEnter(var Message: TCMEnter);
+begin
+  inherited;
+end;
+
+procedure TC4DDBDateEdit.CMExit(var Message: TCMExit);
+begin
+  try
+    if not (csDesigning in ComponentState) and CheckOnExit then
+      CheckValidDate;
+    FDataLink.UpdateRecord;
+  except
+    SelectAll;
+    if CanFocus then SetFocus;
+    raise;
+  end;
+  CheckCursor;
+  DoExit;
+end;
+
+function TC4DDBDateEdit.UseRightToLeftAlignment: Boolean;
+begin
+  Result := DBUseRightToLeftAlignment(Self, Field);
+end;
+
+function TC4DDBDateEdit.ExecuteAction(Action: TBasicAction): Boolean;
+begin
+  Result := inherited ExecuteAction(Action) or (FDataLink <> nil) and
+    FDataLink.ExecuteAction(Action);
+end;
+
+function TC4DDBDateEdit.UpdateAction(Action: TBasicAction): Boolean;
+begin
+  Result := inherited UpdateAction(Action) or (FDataLink <> nil) and
+    FDataLink.UpdateAction(Action);
+end;
+{$ENDREGION}
 
 {$REGION 'TC4DCustomComboEdit'}
 procedure TC4DCustomComboEdit.SetEditRect;
