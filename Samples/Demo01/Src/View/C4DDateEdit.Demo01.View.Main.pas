@@ -15,7 +15,7 @@ uses
   Vcl.StdCtrls,
   Vcl.Mask,
   Vcl.Buttons,
-  C4D.DateEdit;
+  C4D.DateEdit, RxToolEdit;
 
 type
   TC4DDateEditDemo01ViewMain = class(TForm)
@@ -23,6 +23,8 @@ type
     Button1: TButton;
     C4DDateEdit1: TC4DDateEdit;
     C4DDBDateEdit1: TC4DDBDateEdit;
+    C4DDateEdit2: TC4DDateEdit;
+    DateEdit1: TDateEdit;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);

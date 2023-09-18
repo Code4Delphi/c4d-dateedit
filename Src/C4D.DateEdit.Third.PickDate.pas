@@ -59,7 +59,7 @@ uses
 {.$R *.RES}
 
 const
-  SBtnGlyphs: array[0..3] of PChar = ('PREV2', 'PREV1', 'NEXT1', 'NEXT2');
+  SBtnGlyphs: array[0..3] of PChar = ('c4d_prev2', 'c4d_prev1', 'c4d_next1', 'c4d_next2');
 
 procedure FontSetDefault(AFont: TFont);
 
@@ -897,9 +897,7 @@ begin
     Parent := Self;
     Align := alClient;
     ParentColor := True;
-
     ControlStyle := ControlStyle + [csReplicatable];
-
   end;
 
   Control := TPanel.Create(Self);
@@ -911,9 +909,7 @@ begin
     Height := 18;
     BevelOuter := bvNone;
     ParentColor := True;
-
     ControlStyle := ControlStyle + [csReplicatable];
-
   end;
 
   FCalendar := TLocCalendar.Create(Self);
@@ -933,6 +929,7 @@ begin
     Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[0]);
     OnClick := PrevYearBtnClick;
     Hint := 'Voltar 1 ano';
+    ShowHint := True;
   end;
 
   FBtns[1] := TC4DRxTimerSpeedButton.Create(Self);
@@ -943,6 +940,7 @@ begin
     Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[1]);
     OnClick := PrevMonthBtnClick;
     Hint := 'Voltar 1 mês';
+    ShowHint := True;
   end;
 
   FTitleLabel := TLabel.Create(Self);
@@ -954,9 +952,7 @@ begin
     SetBounds(BtnSide * 2 + 1, 1, Control.Width - 4 * BtnSide - 2, 14);
     Transparent := True;
     OnDblClick := TopPanelDblClick;
-
     ControlStyle := ControlStyle + [csReplicatable];
-
   end;
 
   FBtns[2] := TC4DRxTimerSpeedButton.Create(Self);
@@ -967,6 +963,7 @@ begin
     Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[2]);
     OnClick := NextMonthBtnClick;
     Hint := 'Avançar 1 mês';
+    ShowHint := True;
   end;
 
   FBtns[3] := TC4DRxTimerSpeedButton.Create(Self);
@@ -977,6 +974,7 @@ begin
     Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[3]);
     OnClick := NextYearBtnClick;
     Hint := 'Avançar 1 ano';
+    ShowHint := True;
   end;
 //Polaris
   CheckButton;
@@ -1227,6 +1225,7 @@ begin
     Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[0]);
     OnClick := PrevYearBtnClick;
     Hint := 'Voltar 1 ano';
+    ShowHint := True;
   end;
 
   FBtns[1] := TC4DRxTimerSpeedButton.Create(Self);
@@ -1237,6 +1236,7 @@ begin
     Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[1]);
     OnClick := PrevMonthBtnClick;
     Hint := 'Voltar 1 mês';
+    ShowHint := True;
   end;
 
   FBtns[2] := TC4DRxTimerSpeedButton.Create(Self);
@@ -1247,6 +1247,7 @@ begin
     Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[2]);
     OnClick := NextMonthBtnClick;
     Hint := 'Avançar 1 ano';
+    ShowHint := True;
   end;
 
   FBtns[3] := TC4DRxTimerSpeedButton.Create(Self);
@@ -1257,6 +1258,7 @@ begin
     Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[3]);
     OnClick := NextYearBtnClick;
     Hint := 'Avançar 1 ano';
+    ShowHint := True;
   end;
 
   Control := TPanel.Create(Self);
