@@ -451,7 +451,7 @@ type
     property WeekendColor;
     property YearDigits;
     property Visible;
-    property Text;
+    //property Text;
     property OnButtonClick;
     property OnChange;
     property OnClick;
