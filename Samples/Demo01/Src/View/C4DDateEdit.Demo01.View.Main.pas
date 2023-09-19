@@ -22,6 +22,8 @@ type
     Button1: TButton;
     C4DDateEdit1: TC4DDateEdit;
     C4DDateEdit2: TC4DDateEdit;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
   private

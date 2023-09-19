@@ -17,6 +17,32 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
   OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 13
+  object SpeedButton1: TSpeedButton
+    Left = 40
+    Top = 272
+    Width = 20
+    Height = 20
+    Caption = '<<'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -8
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object SpeedButton2: TSpeedButton
+    Left = 104
+    Top = 271
+    Width = 20
+    Height = 20
+    Caption = '|<'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -8
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
   object Edit1: TEdit
     Left = 161
     Top = 152
