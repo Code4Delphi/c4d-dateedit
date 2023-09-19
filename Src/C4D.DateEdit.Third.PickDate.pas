@@ -168,8 +168,7 @@ type
     procedure UpdateCalendar; virtual;
     property CellText[ACol, ARow: Integer]: string read GetCellText;
   published
-    property CalendarDate: TDateTime read FDate write SetCalendarDate
-      stored StoreCalendarDate;
+    property CalendarDate: TDateTime read FDate write SetCalendarDate stored StoreCalendarDate;
     property Day: Integer index 3 read GetDateElement write SetDateElement stored False;
     property Month: Integer index 2 read GetDateElement write SetDateElement stored False;
     property ReadOnly: Boolean read FReadOnly write FReadOnly default False;
@@ -793,7 +792,7 @@ type
 //>Polaris
 //    function GetDate(Index: Integer): TDate;
     procedure SetDate(Index: Integer; Value: TDateTime);
-    procedure BtnHojeClick(Sender: TObject);
+    procedure BtnHojePopupCalendarClick(Sender: TObject);
 //<Polaris
   protected
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
@@ -935,7 +934,7 @@ begin
   LBtnHoje.Caption := 'Hoje: ' + DateToStr(Date);
   LBtnHoje.Hint := 'Ir para o dia de hoje';
   LBtnHoje.ShowHint := True;
-  LBtnHoje.OnClick := BtnHojeClick;
+  LBtnHoje.OnClick := BtnHojePopupCalendarClick;
   //**
 
   FBtns[0] := TC4DRxTimerSpeedButton.Create(Self);
@@ -997,9 +996,9 @@ begin
   CheckButton;
 end;
 
-procedure TPopupCalendar.BtnHojeClick(Sender: TObject);
+procedure TPopupCalendar.BtnHojePopupCalendarClick(Sender: TObject);
 begin
-  FCalendar.CalendarDate := Date;
+  //SetDate(Trunc(Now));
 end;
 
 //>Polaris
@@ -1187,6 +1186,7 @@ type
     procedure SetDate(Date: TDateTime);
     procedure CheckButton;
     function GetDate: TDateTime;
+    procedure BtnHojeSelectDateDlgClick(Sender: TObject);
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -1196,16 +1196,17 @@ type
 constructor TSelectDateDlg.Create(AOwner: TComponent);
 const
   SDateDlgTitle = 'Selecione uma Data';
+  BTN_HOJE_HEIGHT = 20;
 var
   Control: TWinControl;
+  LBtnHoje: TSpeedButton;
 begin
   inherited CreateNew(AOwner);
   Caption := SDateDlgTitle;
 
   BorderStyle := bsToolWindow;
-
   BorderIcons := [biSystemMenu];
-  ClientHeight := 158; // Polaris
+  ClientHeight := 158 + BTN_HOJE_HEIGHT; // Polaris
   ClientWidth := 222;
   FontSetDefault(Font);
   Color := clBtnFace;
@@ -1349,6 +1350,18 @@ begin
     OnDblClick := CalendarDblClick;
   end;
 
+  //**
+  LBtnHoje := TSpeedButton.Create(Self);
+  LBtnHoje.Parent := Control;
+  LBtnHoje.Align := alBottom;
+  LBtnHoje.Height := BTN_HOJE_HEIGHT;
+  //LBtnHoje.ControlStyle := LBtnHoje.ControlStyle + [csReplicatable];
+  LBtnHoje.Caption := 'Hoje: ' + DateToStr(Date);
+  LBtnHoje.Hint := 'Ir para o dia de hoje';
+  LBtnHoje.ShowHint := True;
+  LBtnHoje.OnClick := TopPanelDblClick;// BtnHojeSelectDateDlgClick;
+  //**
+
   OnKeyDown := FormKeyDown;
   Calendar.CalendarDate := Trunc(Now);
   ActiveControl := Calendar;
@@ -1356,7 +1369,8 @@ end;
 
 procedure TSelectDateDlg.SetDate(Date: TDateTime);
 begin
-  if Date = NullDate then Date := System.SysUtils.Date;
+  if Date = NullDate then
+    Date := System.SysUtils.Date;
   try
     Calendar.CalendarDate := Date;
     CalendarChange(nil);
@@ -1430,6 +1444,13 @@ begin
   TitleLabel.Caption := FormatDateTime('MMMM, YYYY', Calendar.CalendarDate);
 //Polaris
   CheckButton;
+end;
+
+procedure TSelectDateDlg.BtnHojeSelectDateDlgClick(Sender: TObject);
+begin
+  Calendar.CalendarDate := Date;
+  Calendar.CalendarDate := Date;
+  //Calendar.NextYear;
 end;
 
 procedure TSelectDateDlg.CalendarDblClick(Sender: TObject);
