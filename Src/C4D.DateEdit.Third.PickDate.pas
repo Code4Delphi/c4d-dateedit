@@ -112,7 +112,7 @@ end;
 type
   TDayOfWeek = 0..6;
 
-  TC4DRxCalendar = class(TCustomGrid)
+  TC4DCalendar = class(TCustomGrid)
   private
 //>Polaris
     FMinDate,
@@ -184,7 +184,7 @@ type
     property MaxDate: TDateTime read FMaxDate write SetMaxDate stored False;
   end;
 
-constructor TC4DRxCalendar.Create(AOwner: TComponent);
+constructor TC4DCalendar.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 //>Polaris
@@ -206,7 +206,7 @@ begin
   UpdateCalendar;
 end;
 
-procedure TC4DRxCalendar.CreateParams(var Params: TCreateParams);
+procedure TC4DCalendar.CreateParams(var Params: TCreateParams);
 begin
   inherited CreateParams(Params);
   Params.Style := Params.Style or WS_BORDER;
@@ -216,12 +216,12 @@ begin
   AddBiDiModeExStyle(Params.ExStyle);
 end;
 
-procedure TC4DRxCalendar.Change;
+procedure TC4DCalendar.Change;
 begin
   if Assigned(FOnChange) then FOnChange(Self);
 end;
 
-procedure TC4DRxCalendar.Click;
+procedure TC4DCalendar.Click;
 var
   TheCellText: string;
 begin
@@ -230,12 +230,12 @@ begin
   if (TheCellText <> '') then Day := StrToInt(TheCellText);
 end;
 
-function TC4DRxCalendar.DaysThisMonth: Integer;
+function TC4DCalendar.DaysThisMonth: Integer;
 begin
   Result := DaysPerMonth(Year, Month);
 end;
 
-procedure TC4DRxCalendar.DrawCell(ACol, ARow: LongInt; ARect: TRect; AState: TGridDrawState);
+procedure TC4DCalendar.DrawCell(ACol, ARow: LongInt; ARect: TRect; AState: TGridDrawState);
 var
   TheText: string;
 //>Polaris
@@ -303,7 +303,7 @@ begin
   end;
 end;
 
-function TC4DRxCalendar.GetCellText(ACol, ARow: Integer): string;
+function TC4DCalendar.GetCellText(ACol, ARow: Integer): string;
 var
   DayNum: Integer;
 begin
@@ -321,7 +321,7 @@ end;
 
 //>Polaris
 
-procedure TC4DRxCalendar.SetMinDate(Value: TDateTime);
+procedure TC4DCalendar.SetMinDate(Value: TDateTime);
 begin
   if FMinDate <> Value then
   begin
@@ -334,7 +334,7 @@ begin
   end;
 end;
 
-procedure TC4DRxCalendar.SetMaxDate(Value: TDateTime);
+procedure TC4DCalendar.SetMaxDate(Value: TDateTime);
 begin
   if FMaxDate <> Value then
   begin
@@ -347,7 +347,7 @@ begin
   end;
 end;
 
-function TC4DRxCalendar.GetCellDate(ACol, ARow: Integer): TDateTime;
+function TC4DCalendar.GetCellDate(ACol, ARow: Integer): TDateTime;
 var
   DayNum: Integer;
 begin
@@ -362,7 +362,7 @@ begin
   end;
 end;
 
-function TC4DRxCalendar.CellInRange(ACol, ARow: Integer): Boolean;
+function TC4DCalendar.CellInRange(ACol, ARow: Integer): Boolean;
 begin
   if (Row < 1) {or ((FMinDate = NullDate) and (FMaxDate = NullDate))} then
     Result := True
@@ -370,7 +370,7 @@ begin
     Result := DateInRange(GetCellDate(ACol, ARow));
 end;
 
-function TC4DRxCalendar.DateInRange(ADate: TDateTime): Boolean;
+function TC4DCalendar.DateInRange(ADate: TDateTime): Boolean;
 begin
   if ((FMinDate = NullDate) and (FMaxDate = NullDate)) or (ADate = NullDate) then
     Result := True
@@ -389,7 +389,7 @@ begin
 end;
 //<Polaris
 
-procedure TC4DRxCalendar.KeyDown(var Key: Word; Shift: TShiftState);
+procedure TC4DCalendar.KeyDown(var Key: Word; Shift: TShiftState);
 //>Polaris
 var
   OldDay: Integer;
@@ -420,7 +420,7 @@ begin
   inherited KeyDown(Key, Shift);
 end;
 
-procedure TC4DRxCalendar.KeyPress(var Key: Char);
+procedure TC4DCalendar.KeyPress(var Key: Char);
 begin
   if CharInSet(Key, ['T', 't']) then
   begin
@@ -430,7 +430,7 @@ begin
   inherited KeyPress(Key);
 end;
 
-function TC4DRxCalendar.SelectCell(ACol, ARow: LongInt): Boolean;
+function TC4DCalendar.SelectCell(ACol, ARow: LongInt): Boolean;
 begin
   if ((not FUpdating) and FReadOnly) or (CellText[ACol, ARow] = '')
 //>Polaris
@@ -441,7 +441,7 @@ begin
     Result := inherited SelectCell(ACol, ARow);
 end;
 
-procedure TC4DRxCalendar.SetCalendarDate(Value: TDateTime);
+procedure TC4DCalendar.SetCalendarDate(Value: TDateTime);
 begin
 //  if FDate <> Value then begin
   if (FMinDate <> NullDate) and (Value < FMinDate) then
@@ -454,12 +454,12 @@ begin
 //  end;
 end;
 
-function TC4DRxCalendar.StoreCalendarDate: Boolean;
+function TC4DCalendar.StoreCalendarDate: Boolean;
 begin
   Result := not FUseCurrentDate;
 end;
 
-function TC4DRxCalendar.GetDateElement(Index: Integer): Integer;
+function TC4DCalendar.GetDateElement(Index: Integer): Integer;
 var
   AYear, AMonth, ADay: Word;
 begin
@@ -473,7 +473,7 @@ begin
   end;
 end;
 
-procedure TC4DRxCalendar.SetDateElement(Index: Integer; Value: Integer);
+procedure TC4DCalendar.SetDateElement(Index: Integer; Value: Integer);
 var
   iValue: Word;
   TYear, TMonth, TDay: Word;
@@ -561,7 +561,7 @@ begin
   end;
 end;
 
-procedure TC4DRxCalendar.SetWeekendColor(Value: TColor);
+procedure TC4DCalendar.SetWeekendColor(Value: TColor);
 begin
   if Value <> FWeekendColor then
   begin
@@ -570,7 +570,7 @@ begin
   end;
 end;
 
-procedure TC4DRxCalendar.SetWeekends(Value: TDaysOfWeek);
+procedure TC4DCalendar.SetWeekends(Value: TDaysOfWeek);
 begin
   if Value <> FWeekends then
   begin
@@ -579,12 +579,12 @@ begin
   end;
 end;
 
-function TC4DRxCalendar.IsWeekend(ACol, ARow: Integer): Boolean;
+function TC4DCalendar.IsWeekend(ACol, ARow: Integer): Boolean;
 begin
   Result := TDayOfWeekName((Integer(StartOfWeek) + ACol) mod 7) in FWeekends;
 end;
 
-procedure TC4DRxCalendar.SetStartOfWeek(Value: TDayOfWeekName);
+procedure TC4DCalendar.SetStartOfWeek(Value: TDayOfWeekName);
 begin
   if Value <> FStartOfWeek then
   begin
@@ -593,7 +593,7 @@ begin
   end;
 end;
 
-procedure TC4DRxCalendar.SetUseCurrentDate(Value: Boolean);
+procedure TC4DCalendar.SetUseCurrentDate(Value: Boolean);
 begin
   if Value <> FUseCurrentDate then
   begin
@@ -608,7 +608,7 @@ end;
 
 { Given a value of 1 or -1, moves to Next or Prev month accordingly }
 
-procedure TC4DRxCalendar.ChangeMonth(Delta: Integer);
+procedure TC4DCalendar.ChangeMonth(Delta: Integer);
 var
   AYear, AMonth, ADay: Word;
   NewDate: TDateTime;
@@ -630,29 +630,30 @@ begin
   CalendarDate := EncodeDate(AYear, AMonth, ADay);
 end;
 
-procedure TC4DRxCalendar.PrevMonth;
+procedure TC4DCalendar.PrevMonth;
 begin
   ChangeMonth(-1);
 end;
 
-procedure TC4DRxCalendar.NextMonth;
+procedure TC4DCalendar.NextMonth;
 begin
   ChangeMonth(1);
 end;
 
-procedure TC4DRxCalendar.NextYear;
+procedure TC4DCalendar.NextYear;
 begin
   if IsLeapYear(Year) and (Month = 2) and (Day = 29) then Day := 28;
   Year := Year + 1;
 end;
 
-procedure TC4DRxCalendar.PrevYear;
+procedure TC4DCalendar.PrevYear;
 begin
-  if IsLeapYear(Year) and (Month = 2) and (Day = 29) then Day := 28;
+  if IsLeapYear(Year) and (Month = 2) and (Day = 29) then
+    Day := 28;
   Year := Year - 1;
 end;
 
-procedure TC4DRxCalendar.CalendarUpdate(DayOnly: Boolean);
+procedure TC4DCalendar.CalendarUpdate(DayOnly: Boolean);
 var
   AYear, AMonth, ADay: Word;
   FirstDate: TDateTime;
@@ -675,12 +676,12 @@ begin
   end;
 end;
 
-procedure TC4DRxCalendar.UpdateCalendar;
+procedure TC4DCalendar.UpdateCalendar;
 begin
   CalendarUpdate(False);
 end;
 
-procedure TC4DRxCalendar.WMSize(var Message: TWMSize);
+procedure TC4DCalendar.WMSize(var Message: TWMSize);
 var
   GridLinesH, GridLinesW: Integer;
 begin
@@ -696,7 +697,7 @@ end;
 { TLocCalendar }
 
 type
-  TLocCalendar = class(TC4DRxCalendar)
+  TLocCalendar = class(TC4DCalendar)
   private
     procedure CMEnabledChanged(var Message: TMessage); message CM_ENABLEDCHANGED;
     procedure CMParentColorChanged(var Message: TMessage); message CM_PARENTCOLORCHANGED;
@@ -777,7 +778,7 @@ end;
 type
   TPopupCalendar = class(TC4DPopupWindow)
   private
-    FCalendar: TC4DRxCalendar;
+    FCalendar: TC4DCalendar;
     FTitleLabel: TLabel;
     FFourDigitYear: Boolean;
     FBtns: array[0..3] of TSpeedButton;
@@ -792,6 +793,7 @@ type
 //>Polaris
 //    function GetDate(Index: Integer): TDate;
     procedure SetDate(Index: Integer; Value: TDateTime);
+    procedure BtnHojeClick(Sender: TObject);
 //<Polaris
   protected
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
@@ -876,14 +878,14 @@ end;
 constructor TPopupCalendar.Create(AOwner: TComponent);
 const
   BTN_SIZE = 20;
-  PN_RODAPE_HEIGHT = 20;
+  BTN_HOJE_HEIGHT = 20;
 var
   Control, BackPanel: TWinControl;
-  LPnRodape: TWinControl;
+  LBtnHoje: TSpeedButton;
 begin
   inherited Create(AOwner);
   FFourDigitYear := FourDigitYear;
-  Height := Max(PopupCalendarSize.Y, 120 + PN_RODAPE_HEIGHT);
+  Height := Max(PopupCalendarSize.Y, 120 + BTN_HOJE_HEIGHT);
   Width := Max(PopupCalendarSize.X, 180);
   Color := clBtnFace;
   FontSetDefault(Font);
@@ -925,18 +927,15 @@ begin
   end;
 
   //**
-  LPnRodape := TPanel.Create(Self);
-  with LPnRodape as TPanel do
-  begin
-    Parent := BackPanel;
-    Align := alBottom;
-    Width := Self.Width - 4;
-    Height := PN_RODAPE_HEIGHT;
-    BevelOuter := bvNone;
-    ParentColor := True;
-    ControlStyle := ControlStyle + [csReplicatable];
-    Caption := 'Hoje: ' + DateToStr(Date);
-  end;
+  LBtnHoje := TSpeedButton.Create(Self);
+  LBtnHoje.Parent := BackPanel;
+  LBtnHoje.Align := alBottom;
+  LBtnHoje.Height := BTN_HOJE_HEIGHT;
+  LBtnHoje.ControlStyle := LBtnHoje.ControlStyle + [csReplicatable];
+  LBtnHoje.Caption := 'Hoje: ' + DateToStr(Date);
+  LBtnHoje.Hint := 'Ir para o dia de hoje';
+  LBtnHoje.ShowHint := True;
+  LBtnHoje.OnClick := BtnHojeClick;
   //**
 
   FBtns[0] := TC4DRxTimerSpeedButton.Create(Self);
@@ -996,6 +995,11 @@ begin
   end;
 
   CheckButton;
+end;
+
+procedure TPopupCalendar.BtnHojeClick(Sender: TObject);
+begin
+  FCalendar.CalendarDate := Date;
 end;
 
 //>Polaris
@@ -1166,7 +1170,7 @@ end;
 
 type
   TSelectDateDlg = class(TForm)
-    Calendar: TC4DRxCalendar;
+    Calendar: TC4DCalendar;
     TitleLabel: TLabel;
     procedure PrevMonthBtnClick(Sender: TObject);
     procedure NextMonthBtnClick(Sender: TObject);
@@ -1331,7 +1335,7 @@ begin
     ParentColor := True;
   end;
 
-  Calendar := TC4DRxCalendar.Create(Self);
+  Calendar := TC4DCalendar.Create(Self);
   with Calendar do
   begin
     Parent := Control;
