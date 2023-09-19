@@ -31,7 +31,6 @@ type
     C4DDBDateEdit2: TC4DDBDateEdit;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
   private
   public
   end;
@@ -42,11 +41,6 @@ var
 implementation
 
 {$R *.dfm}
-
-procedure TC4DDateEditDemo01ViewMain.Button2Click(Sender: TObject);
-begin
-  //C4DDateEdit2.CalendarStyle := csDialog;
-end;
 
 procedure TC4DDateEditDemo01ViewMain.FormCreate(Sender: TObject);
 begin

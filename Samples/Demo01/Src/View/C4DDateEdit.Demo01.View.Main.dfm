@@ -67,7 +67,6 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
     Height = 25
     Caption = 'Button2'
     TabOrder = 2
-    OnClick = Button2Click
   end
   object C4DDateEdit1: TC4DDateEdit
     Left = 184

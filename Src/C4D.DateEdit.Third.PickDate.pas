@@ -875,13 +875,15 @@ end;
 
 constructor TPopupCalendar.Create(AOwner: TComponent);
 const
-  BtnSide = 20; //14; ///AQUI
+  BTN_SIZE = 20;
+  PN_RODAPE_HEIGHT = 20;
 var
   Control, BackPanel: TWinControl;
+  LPnRodape: TWinControl;
 begin
   inherited Create(AOwner);
   FFourDigitYear := FourDigitYear;
-  Height := Max(PopupCalendarSize.Y, 120);
+  Height := Max(PopupCalendarSize.Y, 120 + PN_RODAPE_HEIGHT);
   Width := Max(PopupCalendarSize.X, 180);
   Color := clBtnFace;
   FontSetDefault(Font);
@@ -922,11 +924,26 @@ begin
     OnMouseUp := CalendarMouseUp;
   end;
 
+  //**
+  LPnRodape := TPanel.Create(Self);
+  with LPnRodape as TPanel do
+  begin
+    Parent := BackPanel;
+    Align := alBottom;
+    Width := Self.Width - 4;
+    Height := PN_RODAPE_HEIGHT;
+    BevelOuter := bvNone;
+    ParentColor := True;
+    ControlStyle := ControlStyle + [csReplicatable];
+    Caption := 'Hoje: ' + DateToStr(Date);
+  end;
+  //**
+
   FBtns[0] := TC4DRxTimerSpeedButton.Create(Self);
   with FBtns[0] do
   begin
     Parent := Control;
-    SetBounds(-1, -1, BtnSide, BtnSide);
+    SetBounds(-1, -1, BTN_SIZE, BTN_SIZE);
     //Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[0]);
     OnClick := PrevYearBtnClick;
     Hint := BTN_HINT[0];
@@ -937,7 +954,7 @@ begin
   with FBtns[1] do
   begin
     Parent := Control;
-    SetBounds(BtnSide - 2, -1, BtnSide, BtnSide);
+    SetBounds(BTN_SIZE - 2, -1, BTN_SIZE, BTN_SIZE);
     //Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[1]);
     OnClick := PrevMonthBtnClick;
     Hint := BTN_HINT[1];
@@ -950,7 +967,7 @@ begin
     Parent := Control;
     AutoSize := False;
     Alignment := taCenter;
-    SetBounds(BtnSide * 2 + 1, 1, Control.Width - 4 * BtnSide - 2, BtnSide); //14
+    SetBounds(BTN_SIZE * 2 + 1, 1, Control.Width - 4 * BTN_SIZE - 2, BTN_SIZE); //14
     Transparent := True;
     OnDblClick := TopPanelDblClick;
     ControlStyle := ControlStyle + [csReplicatable];
@@ -960,7 +977,7 @@ begin
   with FBtns[2] do
   begin
     Parent := Control;
-    SetBounds(Control.Width - 2 * BtnSide + 2, -1, BtnSide, BtnSide);
+    SetBounds(Control.Width - 2 * BTN_SIZE + 2, -1, BTN_SIZE, BTN_SIZE);
     //Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[2]);
     OnClick := NextMonthBtnClick;
     Hint := BTN_HINT[2];
@@ -971,13 +988,13 @@ begin
   with FBtns[3] do
   begin
     Parent := Control;
-    SetBounds(Control.Width - BtnSide + 1, -1, BtnSide, BtnSide);
+    SetBounds(Control.Width - BTN_SIZE + 1, -1, BTN_SIZE, BTN_SIZE);
     //Glyph.Handle := LoadBitmap(hInstance, SBtnGlyphs[3]);
     OnClick := NextYearBtnClick;
     Hint := BTN_HINT[3];
     Caption := BTN_CAPTION[3];
   end;
-//Polaris
+
   CheckButton;
 end;
 
