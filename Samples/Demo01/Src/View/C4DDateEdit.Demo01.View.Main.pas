@@ -29,6 +29,8 @@ type
     C4DDateEdit2: TC4DDateEdit;
     C4DDBDateEdit1: TC4DDBDateEdit;
     C4DDBDateEdit2: TC4DDBDateEdit;
+    C4DDateEdit3: TC4DDateEdit;
+    Label1: TLabel;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
   private

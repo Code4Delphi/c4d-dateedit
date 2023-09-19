@@ -1673,9 +1673,9 @@ begin
   FTitle := 'Selecione uma Data';
   FPopupColor := clBtnFace;
   FDefNumGlyphs := 2;
-  FStartOfWeek := Mon;
+  FStartOfWeek := Sun;// Mon;
   FWeekends := [Sun];
-  FWeekendColor := clRed;
+  FWeekendColor := $000080FF; //clRed;
   FYearDigits := dyDefault;
   FCalendarHints := TStringList.Create;
   TStringList(FCalendarHints).OnChange := CalendarHintsChanged;

@@ -191,9 +191,9 @@ begin
   FMaxDate := NullDate;
 //<Polaris
   FUseCurrentDate := True;
-  FStartOfWeek := Mon;
+  FStartOfWeek := Sun; //Mon;
   FWeekends := [Sun];
-  FWeekendColor := clRed;
+  FWeekendColor := $000080FF; //clRed;
   FixedCols := 0;
   FixedRows := 1;
   ColCount := 7;
@@ -288,10 +288,16 @@ begin
   begin
     if IsNumber(TheText) then
       if IsFeriado(EncodeDate(Year, Month, StrToInt(TheText))) then
+      begin
         Font.Color := clBlue;
+        Font.Style := Font.Style + [fsBold];
+      end;
 
     if IsWeekend(ACol, ARow) and not (gdSelected in AState) then
+    begin
       Font.Color := WeekendColor;
+      //Font.Style := Font.Style + [fsBold];
+    end;
 
     PoleDraw;
 {
@@ -792,7 +798,6 @@ type
 //>Polaris
 //    function GetDate(Index: Integer): TDate;
     procedure SetDate(Index: Integer; Value: TDateTime);
-    procedure BtnHojePopupCalendarClick(Sender: TObject);
 //<Polaris
   protected
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
@@ -934,7 +939,7 @@ begin
   LBtnHoje.Caption := 'Hoje: ' + DateToStr(Date);
   LBtnHoje.Hint := 'Ir para o dia de hoje';
   LBtnHoje.ShowHint := True;
-  LBtnHoje.OnClick := BtnHojePopupCalendarClick;
+  LBtnHoje.OnClick := TopPanelDblClick;
   //**
 
   FBtns[0] := TC4DRxTimerSpeedButton.Create(Self);
@@ -965,6 +970,8 @@ begin
     Parent := Control;
     AutoSize := False;
     Alignment := taCenter;
+    Font.Color := clNavy;
+    //Font.Style := [fsBold];
     SetBounds(BTN_SIZE * 2 + 1, 1, Control.Width - 4 * BTN_SIZE - 2, BTN_SIZE); //14
     Transparent := True;
     OnDblClick := TopPanelDblClick;
@@ -994,11 +1001,6 @@ begin
   end;
 
   CheckButton;
-end;
-
-procedure TPopupCalendar.BtnHojePopupCalendarClick(Sender: TObject);
-begin
-  //SetDate(Trunc(Now));
 end;
 
 //>Polaris
@@ -1186,7 +1188,6 @@ type
     procedure SetDate(Date: TDateTime);
     procedure CheckButton;
     function GetDate: TDateTime;
-    procedure BtnHojeSelectDateDlgClick(Sender: TObject);
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -1234,7 +1235,7 @@ begin
     AutoSize := False;
     Caption := '';
     ParentFont := True;
-    Font.Color := clBlue;
+    Font.Color := clNavy;
     Font.Style := [fsBold];
     Transparent := True;
     OnDblClick := TopPanelDblClick;
@@ -1359,7 +1360,7 @@ begin
   LBtnHoje.Caption := 'Hoje: ' + DateToStr(Date);
   LBtnHoje.Hint := 'Ir para o dia de hoje';
   LBtnHoje.ShowHint := True;
-  LBtnHoje.OnClick := TopPanelDblClick;// BtnHojeSelectDateDlgClick;
+  LBtnHoje.OnClick := TopPanelDblClick;
   //**
 
   OnKeyDown := FormKeyDown;
@@ -1444,13 +1445,6 @@ begin
   TitleLabel.Caption := FormatDateTime('MMMM, YYYY', Calendar.CalendarDate);
 //Polaris
   CheckButton;
-end;
-
-procedure TSelectDateDlg.BtnHojeSelectDateDlgClick(Sender: TObject);
-begin
-  Calendar.CalendarDate := Date;
-  Calendar.CalendarDate := Date;
-  //Calendar.NextYear;
 end;
 
 procedure TSelectDateDlg.CalendarDblClick(Sender: TObject);
