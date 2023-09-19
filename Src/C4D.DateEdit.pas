@@ -243,8 +243,7 @@ type
     property GlyphKind default gkDefault;
     property PopupColor: TColor read GetPopupColor write SetPopupColor
       default clBtnFace;
-    property CalendarStyle: TCalendarStyle read GetCalendarStyle
-      write SetCalendarStyle default dcsDefault;
+    property CalendarStyle: TCalendarStyle read GetCalendarStyle write SetCalendarStyle default dcsDefault;
     property StartOfWeek: TDayOfWeekName read FStartOfWeek write SetStartOfWeek default Mon;
     property Weekends: TDaysOfWeek read FWeekends write SetWeekends default [Sun];
     property WeekendColor: TColor read FWeekendColor write SetWeekendColor default clRed;
@@ -1199,7 +1198,8 @@ end;
 
 procedure TC4DCustomComboEdit.SetPopupValue(const Value: Variant);
 begin
-  if FPopup <> nil then TC4DPopupWindow(FPopup).SetValue(Value);
+  if FPopup <> nil then
+    TC4DPopupWindow(FPopup).SetValue(Value);
 end;
 
 function TC4DCustomComboEdit.GetPopupValue: Variant;
@@ -1503,7 +1503,8 @@ end;
 procedure TC4DCustomComboEdit.CMBiDiModeChanged(var Message: TMessage);
 begin
   inherited;
-  if FPopup <> nil then FPopup.BiDiMode := BiDiMode;
+  if FPopup <> nil then
+    FPopup.BiDiMode := BiDiMode;
 end;
 
 function TC4DCustomComboEdit.GetDefaultBitmap(var DestroyNeeded: Boolean): TBitmap;
@@ -1679,15 +1680,14 @@ begin
   FCalendarHints := TStringList.Create;
   TStringList(FCalendarHints).OnChange := CalendarHintsChanged;
   ControlState := ControlState + [csCreating];
+  //CalendarStyle := dcsDefault;
   try
     UpdateFormat;
 
-    FPopup := TC4DPopupWindow(CreatePopupCalendar(Self, BiDiMode,
-      FMinDate, FMaxDate
-
-      ));
+    FPopup := TC4DPopupWindow(CreatePopupCalendar(Self, BiDiMode, FMinDate, FMaxDate));
     TC4DPopupWindow(FPopup).OnCloseUp := PopupCloseUp;
     TC4DPopupWindow(FPopup).Color := FPopupColor;
+
     GlyphKind := gkDefault; { force update }
     FGlyphKind := gkCustom
   finally
@@ -2010,8 +2010,10 @@ end;
 
 function TC4DCustomDateEdit.GetCalendarStyle: TCalendarStyle;
 begin
-  if FPopup <> nil then Result := csPopup
-  else Result := csDialog;
+  if FPopup <> nil then
+    Result := csPopup
+  else
+    Result := csDialog;
 end;
 
 procedure TC4DCustomDateEdit.SetCalendarStyle(Value: TCalendarStyle);
@@ -2022,8 +2024,7 @@ begin
       csPopup:
         begin
           if FPopup = nil then
-            FPopup := TC4DPopupWindow(CreatePopupCalendar(Self, BiDiMode, FMinDate, FMaxDate    // Polaris
-              ));
+            FPopup := TC4DPopupWindow(CreatePopupCalendar(Self, BiDiMode, FMinDate, FMaxDate));
           TC4DPopupWindow(FPopup).OnCloseUp := PopupCloseUp;
           TC4DPopupWindow(FPopup).Color := FPopupColor;
           UpdatePopup;
@@ -2142,17 +2143,20 @@ begin
   begin
     D := Self.Date;
     Action := SelectDate(Self, D, DialogTitle, FStartOfWeek, FWeekends, // Polaris (Self added)
-      FWeekendColor, FCalendarHints,
-      FMinDate, FMaxDate);   // Polaris
-    if CanFocus then SetFocus;
+      FWeekendColor, FCalendarHints, FMinDate, FMaxDate);   // Polaris
+
+    if CanFocus then
+      SetFocus;
+
     if Action then
     begin
       if Assigned(FOnAcceptDate) then FOnAcceptDate(Self, D, Action);
-      if Action then
-      begin
-        Self.Date := D;
-        if FFocused then inherited SelectAll;
-      end;
+        if Action then
+        begin
+          Self.Date := D;
+          if FFocused then
+            inherited SelectAll;
+        end;
     end;
   end;
 end;
@@ -2207,8 +2211,7 @@ begin
   inherited Create(AOwner);
   FEditor := TWinControl(AOwner);
 
-  ControlStyle := ControlStyle + [csNoDesignVisible, csReplicatable,
-    csAcceptsControls];
+  ControlStyle := ControlStyle + [csNoDesignVisible, csReplicatable, csAcceptsControls];
 
   Ctl3D := False;
   ParentCtl3D := False;

@@ -33,7 +33,7 @@ type
   TCharSet = TSysCharSet;
 
 const
-  dcsDefault = csDialog;
+  dcsDefault = csPopup;
   scAltDown = scAlt + vk_Down;
   DefEditBtnWidth = 21;
   NullDate: TDateTime = {-693594} 0;

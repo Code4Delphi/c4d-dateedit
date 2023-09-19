@@ -14,18 +14,21 @@ uses
   Vcl.Dialogs,
   Vcl.StdCtrls,
   Vcl.Mask,
-  Vcl.Buttons, C4D.DateEdit;
+  Vcl.Buttons,
+  C4D.DateEdit.Third.Utils,
+  C4D.DateEdit;
 
 type
   TC4DDateEditDemo01ViewMain = class(TForm)
     Edit1: TEdit;
     Button1: TButton;
-    C4DDateEdit1: TC4DDateEdit;
-    C4DDateEdit2: TC4DDateEdit;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
+    Button2: TButton;
+    C4DDateEdit1: TC4DDateEdit;
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
   public
   end;
@@ -36,6 +39,11 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TC4DDateEditDemo01ViewMain.Button2Click(Sender: TObject);
+begin
+  //C4DDateEdit2.CalendarStyle := csDialog;
+end;
 
 procedure TC4DDateEditDemo01ViewMain.FormCreate(Sender: TObject);
 begin
