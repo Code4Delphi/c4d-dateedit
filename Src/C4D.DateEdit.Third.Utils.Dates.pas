@@ -8,9 +8,11 @@ interface
 uses
   System.SysUtils,
   System.SysConst,
+  System.DateUtils,
   C4D.DateEdit.Third.Utils;
 
-Function IsFeriado(T:TDate):Boolean;
+function DateIsFeriado(data: TDate): Boolean;
+//function IsFeriado(T:TDate):Boolean;
 
 function CurrentYear: Word; inline;
 function IsLeapYear(AYear: Integer): Boolean; inline;
@@ -76,9 +78,78 @@ const
 implementation
 
 uses
-  Windows, Consts; // Polaris
+  Windows,
+  Consts; // Polaris
 
-Function IsFeriado(T:TDate):Boolean;
+function BuscaPascoa(ano: Word): TDate;
+var
+  n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12: Integer;
+  mes, dia: Word;
+begin
+  n1 := ano mod 19;
+  n2 := trunc(ano/100);
+  n3 := ano mod 100;
+  n4 := trunc(n2/4);
+  n5 := n2 mod 4;
+  n6 := trunc((n2 + 8)/25);
+  n7 := trunc((n2-n6 + 1)/3);
+  n8 := (19*n1 + n2-n4-n7 + 15) mod 30;
+  n9 := trunc(n3/4);
+  n10 := n3 mod 4;
+  n11 := (32 + 2*n5 + 2*n9-n8-n10) mod 7;
+  n12 := trunc((n1 + 11*n8 + 22*n11)/451);
+
+  mes := trunc((n8 + n11-7*n12 + 114)/31);
+  dia := (n8 + n11-7*n12 + 114) mod 31;
+
+  Result := IncDay(StrToDateTime(IntToStr(dia) + '/' + IntToStr(mes) + '/' + IntToStr(ano)),1);
+end;
+
+function DateIsFeriado(data: TDate): Boolean;
+var
+  dia, mes, ano: Word;
+  pascoa, carnaval, paixao, corpus: TDate;
+begin
+  Result := False;
+
+  dia := DayOf(data);
+  mes := MonthOf(data);
+
+  // feriados fixos
+  if((dia = 1) and(mes = 1)) or
+    ((dia = 21)and(mes = 4)) or
+    ((dia = 1) and(mes = 5)) or
+    ((dia = 7) and(mes = 9)) or
+    ((dia = 12)and(mes = 10))or
+    ((dia = 2) and(mes = 11))or
+    ((dia = 15)and(mes = 11))or
+    ((dia = 25)and(mes = 12))
+  then
+  begin
+    Result := True;
+    Exit;
+  end;
+
+  ano := YearOf(data);
+
+  // feriados móveis
+  pascoa := BuscaPascoa(ano);
+  carnaval := IncDay(pascoa, -47);
+  paixao := IncDay(pascoa, -2);
+  corpus := IncDay(pascoa, 60);
+
+  if(data = pascoa)or
+    (data = carnaval)or
+    (data = paixao)or
+    (data = corpus)
+  then
+  begin
+    Result := True;
+    Exit;
+  end;
+end;
+
+(*function IsFeriado(T:TDate):Boolean;
   function EasterSunday(Year: Integer): TDateTime;
   {vypocet Velikonocnich svatku}
   var
@@ -116,7 +187,7 @@ Begin
   If (D=25) and (M=12) Then Exit; //25. prosinec 1. svátek vánoèní
   If (D=26) and (M=12) Then Exit; //26. prosinec 2. svátek vánoèní
   Result := False;
-End;
+end;*)
 
 function IsLeapYear(AYear: Integer): Boolean;
 begin

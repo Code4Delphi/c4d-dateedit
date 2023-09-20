@@ -287,7 +287,7 @@ begin
   with ARect, Canvas do
   begin
     if IsNumber(TheText) then
-      if IsFeriado(EncodeDate(Year, Month, StrToInt(TheText))) then
+      if DateIsFeriado(EncodeDate(Year, Month, StrToInt(TheText))) then
       begin
         Font.Color := clBlue;
         Font.Style := Font.Style + [fsBold];
@@ -297,6 +297,16 @@ begin
     begin
       Font.Color := WeekendColor;
       //Font.Style := Font.Style + [fsBold];
+    end;
+
+    //SE FOR O DIA ATUAL
+    if IsNumber(TheText) then
+    begin
+      if(EncodeDate(Year, Month, StrToInt(TheText)) = Date)then
+      begin
+        Font.Color := clRed;
+        Font.Style := Font.Style + [fsBold];
+      end;
     end;
 
     PoleDraw;
