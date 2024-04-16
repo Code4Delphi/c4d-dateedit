@@ -11,6 +11,7 @@ uses
   System.SysConst,
   System.UITypes,
   System.StrUtils,
+  System.DateUtils,
   Winapi.Windows,
   Winapi.Messages,
   Vcl.Controls,
@@ -181,6 +182,7 @@ type
     procedure SetMaxDate(Value: TDateTime);
 // Polaris
     function GetDate: TDateTime;
+    function GetDateDefNow: TDateTime;
 //    procedure SetDate(Value: TDateTime);
 
     procedure SetYearDigits(Value: TYearDigits);
@@ -1894,9 +1896,22 @@ end;
 
 function TC4DCustomDateEdit.GetDate: TDateTime;
 begin
-  if DefaultToday then Result := System.SysUtils.Date
-  else Result := NullDate;
+  if DefaultToday then
+    Result := System.SysUtils.Date
+  else
+    Result := NullDate;
+
   Result := StrToDateFmtDef(FDateFormat, Text, Result);
+end;
+
+function TC4DCustomDateEdit.GetDateDefNow: TDateTime;
+begin
+  Result := Self.GetDate;
+  if Result = NullDate then
+  begin
+    Self.ApplyDate(Trunc(Now));
+    Result := Self.GetDate;
+  end;
 end;
 
 procedure TC4DCustomDateEdit.ValidateEdit;
@@ -1915,10 +1930,14 @@ begin
     if DefaultToday then Value := System.SysUtils.Date
     else Value := NullDate;
   end;
+
   D := Date;
   TestDateBetween(Value);
-  if Value = NullDate then Text := ''
-  else Text := FormatDateTime(FDateFormat, Value);
+  if Value = NullDate then
+    Text := ''
+  else
+    Text := FormatDateTime(FDateFormat, Value);
+
   Modified := D <> Date;
 end;
 
@@ -2111,25 +2130,31 @@ end;
 
 procedure TC4DCustomDateEdit.KeyPress(var Key: Char);
 begin
-  if CharInSet(Key, ['T', 't', 'H', 'h', '+', '-']) and PopupVisible then
+  if CharInSet(Key, ['T', 't', 'H', 'h', '+', '-', '*', '\', '<', '>']) and PopupVisible then
   begin
     TC4DPopupWindow(FPopup).KeyPress(Key);
-    Key := #0;
+    //Key := #0;
   end
   else if DirectInput then
   begin
     case Key of
       'T', 't', 'H', 'h':
-        begin
-          ApplyDate(Trunc(Now));
-          Key := #0;
-        end;
-      '+', '-':
-        begin
-          Key := #0;
-        end;
+        Self.ApplyDate(Trunc(Now));
+      //'+', '-':
+      //  Key := #0;
+      '\':
+        Self.ApplyDate(IncMonth(Self.GetDateDefNow, -1));
+      '*':
+        Self.ApplyDate(IncMonth(Self.GetDateDefNow));
+      '<':
+        Self.ApplyDate(IncYear(Self.GetDateDefNow, -1));
+      '>':
+        Self.ApplyDate(IncYear(Self.GetDateDefNow));
     end;
   end;
+
+  if CharInSet(Key, ['T', 't', 'H', 'h', '+', '-', '*', '\', '<', '>']) then
+    Key := #0;
 
   inherited KeyPress(Key);
 end;

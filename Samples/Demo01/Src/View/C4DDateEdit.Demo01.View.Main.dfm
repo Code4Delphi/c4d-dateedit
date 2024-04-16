@@ -201,6 +201,7 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
     Top = 232
     Width = 121
     Height = 21
+    DefaultToday = True
     DialogTitle = 'Selecione uma Data'
     GlyphKind = gkCustom
     Glyph.Data = {
