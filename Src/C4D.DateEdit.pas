@@ -2111,7 +2111,7 @@ end;
 
 procedure TC4DCustomDateEdit.KeyPress(var Key: Char);
 begin
-  if CharInSet(Key, ['T', 't', '+', '-']) and PopupVisible then
+  if CharInSet(Key, ['T', 't', 'H', 'h', '+', '-']) and PopupVisible then
   begin
     TC4DPopupWindow(FPopup).KeyPress(Key);
     Key := #0;
@@ -2119,7 +2119,7 @@ begin
   else if DirectInput then
   begin
     case Key of
-      'T', 't':
+      'T', 't', 'H', 'h':
         begin
           ApplyDate(Trunc(Now));
           Key := #0;
@@ -2130,6 +2130,7 @@ begin
         end;
     end;
   end;
+
   inherited KeyPress(Key);
 end;
 

@@ -135,6 +135,7 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
       80008080800080808000808080008080800080808000FF00FF00}
     NumGlyphs = 2
     StartOfWeek = Sun
+    WeekendColor = 33023
     TabOrder = 3
   end
   object C4DDateEdit2: TC4DDateEdit
@@ -192,6 +193,7 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
     NumGlyphs = 2
     CalendarStyle = csDialog
     StartOfWeek = Sun
+    WeekendColor = 33023
     TabOrder = 4
   end
   object C4DDBDateEdit1: TC4DDBDateEdit
@@ -249,6 +251,7 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
     NumGlyphs = 2
     TabOrder = 5
     StartOfWeek = Sun
+    WeekendColor = 33023
   end
   object C4DDBDateEdit2: TC4DDBDateEdit
     Left = 392
@@ -306,6 +309,7 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
     CalendarStyle = csDialog
     TabOrder = 6
     StartOfWeek = Sun
+    WeekendColor = 33023
   end
   object C4DDateEdit3: TC4DDateEdit
     Left = 576
@@ -361,6 +365,7 @@ object C4DDateEditDemo01ViewMain: TC4DDateEditDemo01ViewMain
       80008080800080808000808080008080800080808000FF00FF00}
     NumGlyphs = 2
     StartOfWeek = Sun
+    WeekendColor = 33023
     TabOrder = 7
   end
 end
