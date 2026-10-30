@@ -32,16 +32,15 @@ package C4DDateEdit;
 requires
   rtl,
   vcl,
-  //RtmRxCtl270,
   dbrtl,
   vcldb;
 
 contains
-  C4D.DateEdit in 'Src\C4D.DateEdit.pas',
-  C4D.DateEdit.Utils in 'Src\C4D.DateEdit.Utils.pas',
-  C4D.DateEdit.Consts in 'Src\C4D.DateEdit.Consts.pas',
-  C4D.DateEdit.Third.PickDate in 'Src\C4D.DateEdit.Third.PickDate.pas',
-  C4D.DateEdit.Third.Utils in 'Src\C4D.DateEdit.Third.Utils.pas',
-  C4D.DateEdit.Third.Utils.Dates in 'Src\C4D.DateEdit.Third.Utils.Dates.pas';
+  C4D.DateEdit in '..\Src\C4D.DateEdit.pas',
+  C4D.DateEdit.Utils in '..\Src\C4D.DateEdit.Utils.pas',
+  C4D.DateEdit.Consts in '..\Src\C4D.DateEdit.Consts.pas',
+  C4D.DateEdit.Third.PickDate in '..\Src\C4D.DateEdit.Third.PickDate.pas',
+  C4D.DateEdit.Third.Utils in '..\Src\C4D.DateEdit.Third.Utils.pas',
+  C4D.DateEdit.Third.Utils.Dates in '..\Src\C4D.DateEdit.Third.Utils.Dates.pas';
 
 end.
