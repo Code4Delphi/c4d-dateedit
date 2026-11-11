@@ -10,7 +10,7 @@ minimum required tmsbuild version: 2.0
 application:
   id: c4d.dateedit
   name: C4D DateEdit
-  description: A visual component for Delphi VCL that allows the entry and formatting of numeric values, with control over decimal places, rounding, and validation of minimum and maximum values.
+  description: A visual component for Delphi VCL.
   company name: Code4Delphi
   url: https://github.com/Code4Delphi/c4d-dateedit
   vcs protocol: git
